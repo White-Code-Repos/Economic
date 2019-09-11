@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="view_order_form_inherit_sale_stock_branch" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock.branch</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+            	<field name="warehouse_id" position="before">
+            		<field name="cur_user" invisible="1"/>
+        		</field>
+            </field>
+    	</record>
+
+	</data>
+</odoo>

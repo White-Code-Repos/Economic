@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree_inherot" model="ir.ui.view">
+        <field name="name">stock.move.line.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+        	<field name="qty_done" position="after">
+        		<field name="balance_move_loc" string="Balance" invisible="1"/>
+                <field name="balance_move_desto" string="Balance" invisible="1"/>
+    		</field>
+    	</field>	
+	</record>
+
+
+    <record id="view_move_line_form_inherot" model="ir.ui.view">
+        <field name="name">stock.move.line.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="arch" type="xml">
+			<field name="qty_done" position="after">
+        	<field name="balance_move_loc" string="Balance"/>
+                <field name="balance_move_desto" string="Balance"/>
+    		</field>
+
+    	</field>
+	</record>
+</odoo>

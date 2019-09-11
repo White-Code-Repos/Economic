@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="view_sales_config_inherit_src" model="ir.ui.view">
+        <field name="name">view.sales.config.inherit.src</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+        <xpath expr="//div[@id='sale_ebay']" position="before">
+            <h2>Referral Commission</h2>
+            <div class="row mt16 o_settings_container">
+			<div class="col-xs-12">
+                <label for="commission_discount_account"/>
+                <div class="text-muted">
+                                    Referral Commission Account
+                    </div>
+                    <div class="content-group">
+                    <div class="mt16">
+                        <field name="referral_commission_account" class="o_light_label" widget="selection"/>
+                    </div>
+                    </div>
+            </div>
+            </div>
+        </xpath>
+            
+        </field>
+    </record>
+
+    </data>
+</odoo>

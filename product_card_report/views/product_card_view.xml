@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2018 Mostafa Abd El Fattah ERP Consultant (<mostafa.ic2@gmail.com>).
+
+For Module Support : mostafa.ic2@gmail.com  or Skype : mostafa.abd.elfattah1 
+ -->
+<odoo>
+
+
+    <record id="view_product_card_report" model="ir.ui.view">
+        <field name="name">Product Card Report</field>
+        <field name="model">product.card.report</field>
+        <field name="arch" type="xml">
+            <form string="Choose Product to get report">
+                <group>
+                    <group>
+                        <field name="product_id" required="1"/>
+                        <field name="location_id" required="0"/>
+                        <field name="date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="card_table" string="Open Report" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+   
+
+
+    <record id="product_card_action" model="ir.actions.act_window">
+        <field name="name">Product Card Report</field>
+        <field name="res_model">product.card.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_card_report"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem action="product_card_action" id="product_card_menu" parent="stock.menu_warehouse_report" sequence="151" groups="base.group_user"/>
+
+
+</odoo>

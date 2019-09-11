@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form_inherit_search_by_phone" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.search.by.phone</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes" >
+                    <group>
+                        <attribute name="context">{'show_phone': 1, 'show_mobile': 1, 'search_default_customer':1, 'show_address': 1,'show_vat': True}</attribute>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

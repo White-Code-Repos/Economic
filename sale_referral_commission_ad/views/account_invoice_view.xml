@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!-- 
+        <record id="action_account_invoice_payment_comm" model="ir.actions.act_window">
+            <field name="name">Register Payment</field>
+            <field name="res_model">referral.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_account_payment_invoice_form"/>
+            <field name="context">{'default_invoice_ids': [(4, active_id, None)]}</field>
+            <field name="target">new</field>
+        </record> -->
+
+
+
+        <record id="invoice_referral_commission_form_view_comm" model="ir.ui.view">
+            <field name="name">invoice.referral.commission.comm</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page" position="after">
+                    <page string="Referral Commission">
+                        <field name="ref_commission_ids">
+                            <tree editable="bottom">
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="account_id"/>
+                                <field name="journal_id" required="1"/>
+                                <field name="commission_amount" sum="Total Commission"/>
+                                <field name="is_validated" invisible="1"/>
+                                <field name="is_returned" invisible="1"/>
+                                <field name="is_invoice" invisible="1"/>
+                                <button name="validate_referral" string="Validate" type="object" class="oe_highlight" attrs="{'invisible': [('is_validated', '=', False)]}"
+                                  />                                    <button name="return_referral" string="Return" type="object" class="oe_highlight" attrs="{'invisible': ['|',('is_validated', '=', True),('is_returned', '=', False)]}"
+                                    />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+
+    </data>
+</openerp>

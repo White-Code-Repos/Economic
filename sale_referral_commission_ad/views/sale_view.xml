@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="view_order_form_inherit_comm" model="ir.ui.view">
+        <field name="name">view.order.form.inherit.comm</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page" position="after">
+                    <page string="Referral Commission">
+                        <field name="ref_commission_ids">
+                            <tree editable="bottom">
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="account_id" invisible="1"/>
+                                <field name="journal_id" invisible="1"/>
+                                <field name="commission_amount" sum="Total Commission"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+        </field>
+    </record>
+
+    </data>
+</odoo>

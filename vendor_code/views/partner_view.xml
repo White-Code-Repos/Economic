@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+        <!-- make readonly for everyone -->
+        <record id="view_partner_form_vendor_code" model="ir.ui.view">
+            <field name="name">res.partner.partner_credit_limit.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="vendor_code" attrs="{'invisible':[('supplier', '=', 'True')]}"/>
+                </xpath>
+            </field>
+        </record>
+    
+</odoo>

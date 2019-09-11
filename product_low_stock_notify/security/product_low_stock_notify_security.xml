@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_low_stock_notify_security" model="res.groups">
+        <field name="name">Get Product Low Stock Notifications</field>
+    </record>
+</odoo>

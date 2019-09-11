@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sprogroup_purchase_request_user,sprogroup.purchase.request.user,model_sprogroup_purchase_request,base.group_user,1,1,1,1
+access_sprogroup_purchase_request_line_user,sprogroup.purchase.request.line.user,model_sprogroup_purchase_request_line,base.group_user,1,1,1,1
+access_hr_department_purchase_request_user,hr.department.purchase.request.user,hr.model_hr_department,sprogroup_purchase_request.group_sprogroup_purchase_request_user,1,0,0,0

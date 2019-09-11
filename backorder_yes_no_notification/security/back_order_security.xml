@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="back_order_security" model="res.groups">
+        <field name="name">Get Back Order Notifications</field>
+    </record>
+</odoo>

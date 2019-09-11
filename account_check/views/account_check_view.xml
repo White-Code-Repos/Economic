@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--  Checks -->
+        <record model="ir.ui.view" id="view_account_check_tree">
+            <field name="name">account.check.tree</field>
+            <field name="model">account.check</field>
+            <field name="priority">100</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('handed');red:state == 'hrejected';gray:state == 'cancel'" create="false" string="Checks">
+                    <field name="checkbook_id" invisible="context.get('default_type',False) != 'issue_check'"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="issue_date"/>
+                    <field name="payment_date"/>
+                    <!-- <field name="payment_date"/> -->
+                    <field name="partner_id"/>
+                    <!-- <field name="source_partner_id" invisible="context.get('default_type',False) != 'third_check'" string="Source Partner"/> -->
+                    <!-- <field name="destiny_partner_id" string="Destiny Partner"/> -->
+                    <field name="type" invisible="1"/>
+                    <field name="bank_id" invisible="context.get('default_type',False) != 'third_check'"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <!-- <field name="company_id" groups="base.group_multi_company"/> -->
+                    <field name="state"/>
+                    <field name="owner_name" invisible="context.get('default_type',False) != 'third_check'"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_account_check_create_tree">
+            <field name="name">account.check.create.tree</field>
+            <field name="model">account.check</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="inherit_id" ref="view_account_check_tree"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="create">true</attribute>
+                </tree>
+            </field>
+        </record>
+        <!--         <record model="ir.ui.view" id="view_account_check_create_tree">
+                    <field name="name">account.check.tree</field>
+                    <field name="model">account.check</field>
+                    <field name="arch" type="xml">
+                        <tree colors="blue:state == 'draft';black:state in ('handed');red:state == 'hrejected';gray:state == 'cancel'" string="Checks">
+                            <field name="checkbook_id" invisible="context.get('default_type',False) != 'issue_check'"/>
+                            <field name="journal_id"/>
+                            <field name="name" string="Number"/>
+                            <field name="issue_date"/>
+                            <field name="payment_date"/>
+                            <field name="source_partner_id" invisible="context.get('default_type',False) != 'third_check'" string="Source Partner"/>
+                            <field name="bank_id" invisible="context.get('default_type',False) != 'third_check'"/>
+                            <field name="amount" sum="Total Amount"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </record> -->
+
+        <record model="ir.ui.view" id="view_account_check_form">
+            <field name="name">account.check.form</field>
+            <field name="model">account.check</field>
+            <field name="arch" type="xml">
+                <form string="Checks" create="false">
+                    <field name="id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <!-- <field name="issue_check_subtype" invisible="1"/> -->
+                    <field name="journal_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <header>
+                        <!-- usamos la accion en vez del metodo directamente para pedir una fecha -->
+                        <button context="{'default_action_type': 'claim'}" name="%(action_account_check_action_wizard)d" type="action" string="Claim to Customer" attrs="{'invisible': ['|', ('state', '!=', 'rejected'), ('type', '!=', 'third_check')]}" help="It will create a draft debit note to customerand change check state"/>
+                        <button context="{'default_action_type': 'bank_debit'}"
+                                name="%(action_account_check_action_wizard)d"
+                                type="action" string="Bank Debit"
+                                attrs="{'invisible':['|',('state','!=','handed'),('type','=','third_check')]}"
+                                help="It will create a journal entry from Deferred Check Account to bank account and change check state"/>
+                        <button
+                                name="bank_debit_action"
+                                type="object"
+                                string="Bank Debit"
+                                class="oe_highlight"
+                                attrs="{'invisible':['|',('state','not in',['inbank','returned']),('type','!=','third_check')]}"
+                                help="It will create a journal entry from Deferred Check Account to bank account and change check state"/>
+                        <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Supplier Rejection" states="delivered,handed" help="It will create a debit note from supplier in draft state and change check state"/>
+                        <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Bank Rejection" states="deposited" help="It will create an account entry from bank account to company rejection account and change check state"/>
+                        <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Sell Rejection" states="selled" help="It will create an account entry from cash account to company rejection account and change check state"/>
+                        <!-- <field name="state" widget="statusbar"/> -->
+                        <button name="open_wizard_inbank_check" type="object" string="In Bank"
+                                attrs="{'invisible':['|',('state','!=','handed'),('type','!=','third_check')]}" class="oe_highlight"/>
+                        <button name="bank_return_action" type="object" string="Return Check"
+                                attrs="{'invisible':['|',('state','!=','inbank'),('type','!=','third_check')]}"/>
+                        <button name="change_state_handed" type="object" string="Hand Check"
+                                attrs="{'invisible':['|',('state','!=','holding'),('type','!=','third_check')]}" class="oe_highlight"/>
+                        <button name="open_wizard_customer_notes_return" type="object" string="Customer Returns Note" class="oe_highlight"
+                                attrs="{'invisible':['|','|',('state','=','rejected'), ('operation_ids','=', []), ('type','!=','third_check')]}" />
+                        <field name="state" widget="statusbar" select="1" readonly="1"
+                               statusbar_visible="holding,handed,inbank,debited,returned,cancel"/>
+
+                    </header>
+                    <sheet string="Checks">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="journal_id"/>
+                                <field name="checkbook_id" attrs="{'invisible':[('type','!=','issue_check')],'required':[('type','=','issue_check')]}" domain="[('journal_id', '=', journal_id)]"/>
+                                <field name="bank_id"/>
+                                <field name="number"/>
+                                <field name="amount"/>
+                                <field name="amount_currency" attrs="{'invisible': [('amount_currency', '=', 0.0)]}"/>
+                            </group>
+                            <group>
+                                <field name="state"/>
+                                <field name="owner_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                                <field name="owner_vat" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                                <field name="issue_date"/>
+                                <field name="partner_id" invisible="0"/>
+                                <field name="inbank_account_id" invisible="0"/>
+                                <field name="payment_date"/>
+                                <!-- <field name="company_id" groups="base.group_multi_company" widget="selection"/> -->
+                            </group>
+                        </group>
+                        <group string="Operations">
+                            <field name="operation_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="operation"/>
+                                    <field name="origin_name" string="Origin"/>
+                                    <field name="partner_id"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="date"/>
+                                        <field name="operation"/>
+                                        <field name="origin"/>
+                                        <field name="partner_id"/>
+                                        <field name="notes"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                        <!-- <group string="Related Documents">
+                            <field name="move_line_id"/>
+                            <field name="deposit_move_line_id"/>
+                        </group> -->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_check_create_form">
+            <field name="name">account.check.create.form</field>
+            <field name="model">account.check</field>
+            <field name="inherit_id" ref="view_account_check_form"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">true</attribute>
+                </form>
+                <sheet position="before">
+                    <!-- Si está creando un cheque a mano le damos este mensaje -->
+                    <p class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible':[('id','!=',False)]}">Recuerde que los cheques se crean con los pagos.<br/><b>Solamente</b> debe crear cheques manualmente para realizar algún <b>ajuste</b> o para la <b>carga incial</b> de los mismos.<br/>Podrá cargar las operaciones correspondientes una vez que haya guardado el cheque.</p>
+                    <p class="alert alert-info oe_edit_only" role="alert" style="margin-bottom:0px;" attrs="{'invisible':[('id','=', False)]}"><b>IMPORTANTE:</b> las operaciones de cheques se crean automáticamente con los pagos, transferencias o los botones disponibles sobre el cheque.<br/><b>SOLO</b> debe crear o modificar operaciones para <b>carga de cheques inciales</b> o ajustes sobre <b>circuitos no convencionales.</b></p>
+                </sheet>
+                <field name="operation_ids" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="attrs">{'readonly':[('id','=',False)]}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_checks_search">
+            <field name="name">check.search</field>
+            <field name="model">account.check</field>
+            <field name="arch" type="xml">
+                <search string="Checks">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                    <field name="owner_name"/>
+                    <field name="owner_vat"/>
+                    <field name="payment_date"/>
+                    <!-- <field name="deposit_date"/> -->
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_issue_date" string="Issue Date" context="{'group_by':'issue_date'}"/>
+                        <filter name="group_by_payment_date" string="Payment Date" context="{'group_by':'payment_date'}"/>
+                        <!-- <filter string="Deposit Date" context="{'group_by':'deposit_date:day'}"/>                         -->
+                        <filter name="group_by_journal_id" string="Journal" context="{'group_by':'journal_id'}"/>
+                        <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+                        <filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
+                        <!-- <filter string="Destiny Partner" context="{'group_by':'destiny_partner_id'}"/> -->
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_check_calendar">
+            <field name="name">account.check.calendar</field>
+            <field name="model">account.check</field>
+            <field name="arch" type="xml">
+                <calendar string="Checks"
+                          mode="month"
+                          date_start="payment_date"
+                          color="bank_id">
+                    <field name="amount"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Third Check Menu -->
+        <record model="ir.actions.act_window" id="action_third_check">
+            <field name="name">Third Checks</field>
+            <field name="res_model">account.check</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <!-- <field name="search_view_id" ref=""/> -->
+            <!-- <field name="view_id" ref="view_account_check_tree"/> -->
+            <field name="domain">[('type','=','third_check')]</field>
+            <field name="context">{'search_default_state':'holding','default_type':'third_check'}</field>
+        </record>
+
+        <menuitem
+                name="Checks"
+                string="Checks"
+                id="menu_checks"
+                sequence="40"
+                parent="account.menu_finance_entries"/>
+
+        <menuitem
+                action="action_third_check"
+                id="menu_third_check"
+                sequence="40"
+                parent="menu_checks"/>
+
+        <!-- Issued Check Menu -->
+        <record model="ir.actions.act_window" id="action_issue_check">
+            <field name="name">Issue Checks</field>
+            <field name="res_model">account.check</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <!-- <field name="search_view_id" ref=""/> -->
+            <!-- <field name="view_id" ref="view_account_check_tree"/> -->
+            <field name="domain">[('type','=','issue_check')]</field>
+            <field name="context">{'search_default_state':'handed','default_type':'issue_check'}</field>
+        </record>
+
+        <menuitem
+                action="action_issue_check"
+                id="menu_issue_check"
+                sequence="50"
+                parent="menu_checks"/>
+
+    </data>
+</openerp>

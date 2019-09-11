@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2018 Mostafa Abd El Fattah ERP Consultant (<mostafa.ic2@gmail.com>).
+
+For Module Support : mostafa.ic2@gmail.com  or Skype : mostafa.abd.elfattah1 
+ -->
+<openerp>
+    <data>
+    
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.view</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+            	<button name="action_quotation_send" position="before">
+                    <field name="is_validated" invisible='1' string="Validated"/>
+            		<button name="action_delivery_create" string="Create Delivery Order" attrs="{'invisible': [('is_validated', '=', False)]}" type="object" class="btn-primary"/>
+            	</button>
+                <xpath expr="//button[@name='action_confirm'][1]" position="replace">
+
+                    <button name="action_confirm_wo_delivery"
+                    string="Confirm Order" type="object" class="btn-primary"
+                    attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+
+                </xpath>
+                <xpath expr="//button[@name='action_confirm']" position="replace">
+                    <button name="action_confirm_wo_delivery" id="action_confirm"
+                    string="Confirm Order" class="btn-primary" type="object"
+                    attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
+
+                </xpath>
+            </field>
+        </record>
+
+            
+    </data>
+</openerp>

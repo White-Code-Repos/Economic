@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="seq_stock_resupply_request" model="ir.sequence">
+            <field name="name">Stock Resupply Request</field>
+            <field name="code">stock.resupply.request</field>
+            <field name="prefix">SR-</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+
+</odoo>

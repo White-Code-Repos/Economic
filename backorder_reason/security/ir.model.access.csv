@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_backorder_reason,backorder_reason_name,backorder_reason.model_backorder_reason,,1,1,1,1

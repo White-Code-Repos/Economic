@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2018 Mostafa Abd El Fattah ERP Consultant (<mostafa.ic2@gmail.com>).
+
+For Module Support : mostafa.ic2@gmail.com  or Skype : mostafa.abd.elfattah1 
+ -->
+<odoo>
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field eval="12" name="priority"/>
+			<field name="inherit_id" ref="stock.view_picking_form"/>
+			<field name="arch" type="xml">
+				<field name="origin" position="after">
+					<field name="action" attrs="{'invisible':[('action','=', False)]}" string="Action done"/>
+					<field name="backorder_reason_id" string="Reason" attrs="{'invisible':[('backorder_reason_id','=', False)]}"/>
+				</field>
+
+        	</field>
+    	</record>
+
+
+
+
+
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<odoo>
+    <record id="warehouse_branch_rule_2" model="ir.rule">
+    <field name="name">Personal Allowed Warehouses</field>
+	<field name="model_id" ref="stock.model_stock_picking_type"/>
+<field name="domain_force">[('warehouse_id.id','in',user.warehouses_ids.ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
+	</odoo>

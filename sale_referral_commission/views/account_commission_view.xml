@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_payment_referral" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer', 'search_default_inbound_filter': 1}</field>
+            <field name="domain">[('ref_state','=', 'payment')]</field>
+            <field name="view_id" ref="account.view_account_payment_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Register a payment
+                </p><p>
+                  Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_payment_refund" model="ir.actions.act_window">
+            <field name="name">Refunds</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier', 'search_default_outbound_filter': 1}</field>
+            <field name="domain">[('ref_state','=', 'refund')]</field>
+            <field name="view_id" ref="account.view_account_supplier_payment_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Register a payment
+                </p><p>
+                  Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+
+
+
+
+		<menuitem id="menu_referral_commission" name="Referral Commissions" parent="account.menu_finance_receivables" sequence="3" groups="base.group_user"/>
+
+
+
+
+        <menuitem id="menu_referral_payment" name="Referral Payments"
+            parent="menu_referral_commission"
+            action="action_payment_referral" sequence="1"/>
+
+        <menuitem action="action_payment_refund" id="menu_referral_refund"
+        	name="Referral Refunds" parent="menu_referral_commission" sequence="20"/>
+
+
+
+	</data>
+</odoo>
+
+

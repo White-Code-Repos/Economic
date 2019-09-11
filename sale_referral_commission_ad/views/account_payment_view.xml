@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_payment_form_inhsrc" model="ir.ui.view">
+            <field name="name">account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+            	<field name="communication" position="after">
+            		<field name="referral_payment_id" attrs="{'invisible': [('referral_payment_id', '=', False)]}"/>
+            		<field name="referral_id" attrs="{'invisible': [('referral_payment_id', '=', False)]}"/>
+                    <field name="ref_state" invisible="1"/>
+        		</field>
+
+        	</field>
+    	</record>
+
+
+
+
+
+
+
+
+
+	</data>
+</odoo>

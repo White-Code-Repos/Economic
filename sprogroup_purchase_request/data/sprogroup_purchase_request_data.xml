@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="seq_sprogroup_purchase_request" model="ir.sequence">
+            <field name="name">Sprogroup Purchase Request</field>
+            <field name="code">sprogroup.purchase.request</field>
+            <field name="prefix">PR-</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+
+<!-- Discuss utility templates for notifications -->
+        <template id="message_user_assigned">
+			<p style="margin: 0px;">
+   	 		<span>Dear <t t-esc="object.user_id.sudo().name"/>,</span><br />
+    		<span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.name_get()[0][1]"/>.</span>
+			</p>
+			<p style="margin-top: 24px; margin-bottom: 16px;">
+    		<a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+            View <t t-esc="model_description or 'document'"/>
+    		</a>
+			</p>
+        </template>
+
+
+    </data>

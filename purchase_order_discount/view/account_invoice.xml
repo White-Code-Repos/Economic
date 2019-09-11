@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record model="ir.ui.view" id="account_invoice_supplier_form">
+        <field name="name">account.invoice.supplier.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='discount']" position="attributes">
+                    <attribute name="groups">purchase_order_discount.group_discount_per_po_line</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            string="Purchase Request"
+            id="action_report_purchase_requests"
+            model="purchase.request"
+            report_type="qweb-pdf"
+            name="skit_po_request.report_purchaserequests"
+            file="skit_po_request.report_purchaserequests"
+         />
+    </data>
+</odoo>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo>
+        <record model="ir.ui.view" id="view_sprogroup_purchase_request_form">
+            <field name="name">sprogroup.purchase.request.form</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Request" >
+                <header>
+                    <button name="button_draft"
+                            states="to_approve,leader_approved,manager_approved,rejected,done"
+                            string="Reset"
+                            type="object"
+                            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_manager"/>
+                    <button name="button_to_approve" states="draft"
+                            string="Request approval" type="object"
+                            class="oe_highlight"/>
+                    <button name="button_leader_approved"
+                            string="Leader Approve"
+                            type="object"
+                            class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('can_leader_approved', '=', False)]}"
+                            />
+                          
+                    <button name="button_manager_approved"
+                            states="leader_approved"
+                            string="Manager Approve"
+                            type="object"
+                            class="oe_highlight"
+                            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_manager"
+                    />
+                    <button name="button_done"
+                            states="manager_approved"
+                            string="Done"
+                            type="object"
+                            class="oe_highlight"
+                            groups="sprogroup_purchase_request.group_sprogroup_purchase_request_manager"/>
+                    <button name="button_rejected"
+                            string="Reject"
+                            type="object"
+                            attrs="{'invisible': [('can_reject', '=', False)]}"
+                    />
+                    
+                    <button string="New Quotation" states="done" name="make_purchase_quotation" type="object"
+                        
+                        groups="sprogroup_purchase_request.group_sprogroup_purchase_request_manager"
+                        context="{'default_product_ids': line_ids}"
+                    />
+                    
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,leader_approved,manager_approved,done,rejected"
+                           statusbar_colors='{"manager_approved":"blue"}'/>
+
+
+                </header>
+                <sheet>
+                    <field name="is_editable" invisible="1"/>
+                    <div class="oe_edit_only">
+                        <label for="name" class="oe_inline"/>
+                    </div>
+                    <h1>
+                        <field name="name" class="oe_inline" attrs="{'readonly': [('is_editable','=', False)]}"/>
+
+                        <!-- Add Space Here  Error because of - in odoo 12 -->
+                        
+                        <field name="code" class="oe_inline" attrs="{'readonly': [('is_editable','=', False)]}"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="can_leader_approved" invisible="1"/>
+                            <field name="can_manager_approved" invisible="1"/>
+                            <field name="can_reject" invisible="1"/>
+                            <field name="requested_by" readonly="1"/>
+                            <field name="department_id" />
+                            <field name="assigned_to" attrs="{'readonly': [('is_editable','=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="date_start"
+                               attrs="{'readonly': [('is_editable','=', False)]}"/>
+                            <field name="end_start"
+                               attrs="{'readonly': [('is_editable','=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids" attrs="{'readonly': [('is_editable','=', False)]}">
+                                <tree decoration-muted="cancelled == True">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="date_required"/>
+                                    <field name="cancelled" invisible="1"/>
+                                    <field name="is_editable" invisible="1"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="is_editable" invisible="1"/>
+                                                <field name="product_id"/>
+                                                <field name="name"/>
+                                                <label for="product_qty" />
+                                                <div>
+                                                    <field name="product_qty"
+                                                           class="oe_inline"/>
+                                                    <field name="product_uom_id"
+                                                           groups="product.group_uom"
+                                                           class="oe_inline"/>
+                                                </div>
+
+                                                <field name="date_required"/>
+                                                <field name="cancelled"/>
+
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <separator string="Specifications"/>
+                                            <newline/>
+                                            <field name="specifications" nolabel="1" attrs="{'readonly': [('is_editable','=', False)]}"/>
+                                        </group>
+                                        <notebook>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="description" attrs="{'readonly': [('is_editable','=', False)]}"/>
+                        </page>
+
+                        <page string="Other Information">
+                            <group>
+                                <group>
+                                     <field name="create_date" readonly="1"/>
+                                </group>
+                                <group>
+                                     <field name="create_uid" readonly="1"/>
+                                </group>
+                            </group>
+
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sprogroup_purchase_request_tree">
+            <field name="name">sprogroup.purchase.request.tree</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_needaction==True"
+                      decoration-info="state in ('draft','to_approve')"
+                      decoration-muted="state in ('rejected')"
+                      string="Purchase Request">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="requested_by"/>
+                    <field name="state"/>
+                </tree>
+          </field>
+        </record>
+
+        <record id="view_sprogroup_purchase_request_search" model="ir.ui.view">
+            <field name="name">sprogroup.purchase.request.list.select</field>
+            <field name="model">sprogroup.purchase.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Request">
+                    <field name="name" string="Purchase Request"/>
+                    <separator/>
+                    <field name="state"/>
+                    <filter name="unassigned" string="Unassigned"
+                            domain="[('assigned_to','=', False)]"
+                            help="Unassigned Request"/>
+                    <filter name="state_draft" string="Draft"
+                            domain="[('state','=','draft')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_to_approve" string="To Approve"
+                            domain="[('state','=','to_approve')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_approved" string="Leader Approved"
+                            domain="[('state','=','leader_approved')]"
+                            help="Request is approved by leader"/>
+                    <filter name="state_approved" string="Manager Approved"
+                            domain="[('state','=','manager_approved')]"
+                            help="Request is approved"/>
+                    <filter name="state_rejected" string="Rejected"
+                            domain="[('state','=','rejected')]"
+                            help="Request is rejected"/>
+                    <filter name="state_done" string="Done"
+                            domain="[('state','=','done')]"
+                            help="Request is done"/>
+                    <filter string="Unread Messages"
+                            name="message_needaction"
+                            domain="[('message_needaction','=',True)]"/>
+                    <field name="requested_by" />
+                    <field name="assigned_to" />
+                    <group expand="0" string="Group By...">
+                        <!-- Set the user ID Hear -->
+                        <!-- Error b/w 11 and 12 "using of uid" "don't set name in filter in 11 and must in 12" -->
+                        <filter string="Requested by" icon="terp-personal"
+                                domain="[]"
+                                name="requested_by"
+                                context="{'group_by':'requested_by'}"/>
+                        <filter string="Assigned to" icon="terp-personal"
+                                domain="[]"
+                                name="assigned_to"
+                                context="{'group_by':'assigned_to'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl"
+                                name="origin"
+                                domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Start Date"
+                                name="date_start"
+                                 icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="sprogroup_purchase_request_form_action">
+            <field name="name">Purchase Requests</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sprogroup.purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_requested_by":uid}</field>
+            <field name="search_view_id" ref="view_sprogroup_purchase_request_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new purchase request process.
+              </p><p>
+                A purchase request is an instruction to Purchasing to procure
+                a certain quantity of materials services, so that they are
+                available at a certain point in time.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_sprogroup_purchase_request_act"
+            sequence="10"
+            parent="purchase.menu_procurement_management"
+            action="sprogroup_purchase_request_form_action"
+            />
+                        
+
+
+        <act_window
+            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            id="action_sprogroup_purchase_request_line_product_tree"
+            name="Sprogroup Purchase Requests"
+            res_model="sprogroup.purchase.request.line"
+            src_model="product.product"
+            groups="base.group_user"/>
+
+</odoo>
